@@ -28,11 +28,11 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		public $list_type;
 
 		/**
-		 * List of item objects
+		 * List of post objects.
 		 *
-		 * @var $list
+		 * @var $query
 		 */
-		public $list;
+		public $query;
 
 		/**
 		 * Card look (Automatic or Manual).
@@ -48,10 +48,6 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 
 			$this->label    = __( 'Simple Posts', 'hogan-simple-posts' );
 			$this->template = __DIR__ . '/assets/template.php';
-
-			add_filter( 'hogan/module/simple_posts/inner_wrapper_tag', function () {
-				return 'ul';
-			} );
 
 			parent::__construct();
 		}
@@ -194,18 +190,10 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 			$this->card_look = $content['card_look'];
 
 			if ( 'manual' === $this->list_type ) :
-				$this->list = $this->populate_manual_list( $content['manual_list'] );
+				$this->query = $this->populate_manual_list( $content['manual_list'] );
 			elseif ( 'automatic' === $this->list_type ) :
-				$this->list = $this->populate_automatic_list( $content['automatic_list'], $content['number_of_items'] );
+				$this->query = $this->populate_automatic_list( $content['automatic_list'], $content['number_of_items'] );
 			endif;
-
-			add_filter( 'hogan/module/simple_posts/inner_wrapper_classes', function ( $classes ) {
-				$classes[] = 'list-items';
-				$classes[] = 'card-look-' . $this->card_look;
-
-				return $classes;
-			} );
-
 
 			parent::load_args_from_layout_content( $content );
 		}
@@ -214,62 +202,42 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * Validate module content before template is loaded.
 		 */
 		public function validate_args() {
-			return ! empty( $this->list );
+			return ! empty( $this->query->have_posts() );
+		}
+
+		/**
+		 * Use super class method to reset post data.
+		 */
+		protected function render_closing_template_wrappers() {
+			parent::render_closing_template_wrappers();
+
+			\wp_reset_postdata();
 		}
 
 		/**
 		 * Create list of post objects from post ids picked in manual list.
 		 *
-		 * @param array $category Category to fetch posts from
-		 * @param int $number_of_posts Number of posts to fetch
+		 * @param array $category Category to fetch posts from.
+		 * @param int $number_of_posts Number of posts to fetch.
 		 *
-		 * @return array List of post items for the template
+		 * @return List of posts to loop in the template.
 		 */
 		protected function populate_automatic_list( $category, $number_of_posts ) {
 
-
-			/*$args = array(
-				'post_type' => 'post',
+			$args = [
+				'post_type'      => 'post',
 				'posts_per_page' => $number_of_posts,
-				'tax_query' => array(
-					array(
+				'no_found_rows'  => true,
+				'tax_query'      => [
+					[
 						'taxonomy' => 'category',
 						'field'    => 'term_id',
 						'terms'    => $category,
-					),
-				),
-			);*/
-
-			$args = [
-				'post_type' => [ 'post', 'page' ],
-				'orderby' => 'post__in',
-				'post__in'  => [ 126, 28, 1 ],
+					],
+				],
 			];
 
-			$query = new \WP_Query( $args );
-
-			$list = [];
-
-			if ( $query->have_posts() ) {
-				while ( $query->have_posts() ) {
-					$query->the_post();
-					// display content
-					$post_id = get_the_id();
-					$excerpt = empty( $query->post_excerpt ) ? wp_trim_words( get_the_content(), 20 ) : $query->post_excerpt;
-					$item    = [
-						'title'          => get_the_title( $post_id ),
-						'excerpt'        => $excerpt,
-						'featured_image' => get_the_post_thumbnail( $post_id ),
-						'url'            => get_the_permalink( $post_id ),
-					];
-
-					$list[] = (object) $item;
-				}
-			}
-
-			wp_reset_postdata();
-
-			return $list;
+			return new \WP_Query( $args );
 		}
 
 		/**
@@ -277,25 +245,20 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 *
 		 * @param array $post_ids List of ids.
 		 *
-		 * @return array List of post items for the template
+		 * @return List of posts to loop in the template.
 		 */
 		protected function populate_manual_list( $post_ids ) {
-			$list = [];
 
-			foreach ( $post_ids as $post_id ) {
-				$post    = get_post( $post_id );
-				$excerpt = empty( $post->post_excerpt ) ? wp_trim_words( $post->post_content, 20 ) : $post->post_excerpt;
-				$item    = [
-					'title'          => get_the_title( $post_id ),
-					'excerpt'        => $excerpt,
-					'featured_image' => get_the_post_thumbnail( $post_id ),
-					'url'            => get_the_permalink( $post_id ),
-				];
+			$args = [
+				'post_type'              => [ 'post', 'page' ],
+				'orderby'                => 'post__in',
+				'post__in'               => $post_ids,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			];
 
-				$list[] = (object) $item;
-			}
-
-			return $list;
+			return new \WP_Query( $args );
 		}
 
 	}
