@@ -34,11 +34,7 @@ if ( $this->query->have_posts() ) : ?>
 							printf( '<h2>%s</h2>', esc_html( get_the_title() ) );
 						}
 						?>
-						<?php
-						if ( ! empty( get_the_excerpt() ) ) {
-							printf( '<p class="entry-summary">%s</p>', wp_kses_post( get_the_excerpt() ) );
-						}
-						?>
+						<?php the_excerpt(); ?>
 					</div>
 				</a>
 			</li>

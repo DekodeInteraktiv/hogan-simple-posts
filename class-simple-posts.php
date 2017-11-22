@@ -195,7 +195,20 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 				$this->query = $this->populate_automatic_list( $content['automatic_list'], $content['number_of_items'] );
 			endif;
 
+			add_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // add filter for custom excerpt.
+
 			parent::load_args_from_layout_content( $content );
+		}
+
+		/**
+		 * Filter hook for custom excerpt.
+		 *
+		 * @param string $excerpt.
+		 *
+		 * @return string
+		 */
+		public function on_the_excerpt( $excerpt ) {
+			return apply_filters( 'hogan/module/simple_post/the_excerpt', $excerpt );
 		}
 
 		/**
@@ -210,7 +223,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 */
 		protected function render_closing_template_wrappers() {
 			parent::render_closing_template_wrappers();
-
+			remove_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // remove filter for custom excerpt.
 			\wp_reset_postdata();
 		}
 
