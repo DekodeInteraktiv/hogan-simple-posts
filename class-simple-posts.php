@@ -35,11 +35,11 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		public $query;
 
 		/**
-		 * Card look (Automatic or Manual).
+		 * Card Type (Small, Medium, Large)
 		 *
-		 * @var $card_look
+		 * @var $card_type
 		 */
-		public $card_look;
+		public $card_type;
 
 		/**
 		 * Module constructor.
@@ -78,14 +78,14 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 				],
 				[
 					'type'          => 'button_group',
-					'key'           => $this->field_key . '_card_look',
-					'label'         => __( 'Card Look', 'hogan-simple-posts' ),
-					'name'          => 'card_look',
-					'instructions'  => __( 'Choose card look', 'hogan-simple-posts' ),
+					'key'           => $this->field_key . '_card_type',
+					'label'         => __( 'Card Type', 'hogan-simple-posts' ),
+					'name'          => 'card_type',
+					'instructions'  => __( 'Choose card type', 'hogan-simple-posts' ),
 					'choices'       => [
-						'standard' => __( 'Standard', 'hogan-simple-posts' ),
-						'slim'     => __( 'Slim', 'hogan-simple-posts' ),
-						'no_image' => __( 'No Image', 'hogan-simple-posts' ),
+						'small'  => __( 'Small', 'hogan-simple-posts' ),
+						'medium' => __( 'Medium', 'hogan-simple-posts' ),
+						'large'  => __( 'Large', 'hogan-simple-posts' ),
 					],
 					'allow_null'    => 0,
 					'default_value' => 'automatic',
@@ -187,7 +187,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		public function load_args_from_layout_content( $content ) {
 
 			$this->list_type = $content['list_type'];
-			$this->card_look = $content['card_look'];
+			$this->card_type = $content['card_type'];
 
 			if ( 'manual' === $this->list_type ) :
 				$this->query = $this->populate_manual_list( $content['manual_list'] );
@@ -203,7 +203,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		/**
 		 * Filter hook for custom excerpt.
 		 *
-		 * @param string $excerpt.
+		 * @param string $excerpt .
 		 *
 		 * @return string
 		 */
