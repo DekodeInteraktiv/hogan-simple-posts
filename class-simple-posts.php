@@ -208,7 +208,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * @return string
 		 */
 		public function on_the_excerpt( $excerpt ) {
-			return apply_filters( 'hogan/module/simple_post/the_excerpt', $excerpt );
+			return apply_filters( 'hogan/module/simple_post/the_excerpt', $excerpt, $this );
 		}
 
 		/**
@@ -264,6 +264,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 
 			$args = [
 				'post_type'              => [ 'post', 'page' ],
+				'posts_per_page'         => count( $post_ids ),
 				'orderby'                => 'post__in',
 				'post__in'               => $post_ids,
 				'no_found_rows'          => true,

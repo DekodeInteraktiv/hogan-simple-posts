@@ -22,9 +22,7 @@ if ( $this->query->have_posts() ) : ?>
 				<a href="<?php echo get_the_permalink(); ?>">
 					<?php if ( true === apply_filters( 'hogan/module/simple_post/show_image_column', 'small' !== $this->card_type, $this ) ) : ?>
 						<div class="column">
-							<?php if ( ! empty( get_the_post_thumbnail() ) ) {
-								printf( '<p class="featured-image">%s</p>', get_the_post_thumbnail() );
-							} ?>
+							<p class="featured-image"><?php echo get_the_post_thumbnail( null, apply_filters( 'hogan/module/simple_posts/image_size', 'post-thumbnail', $this ) ); ?></p>
 						</div>
 					<?php endif; ?>
 					<div class="column">
