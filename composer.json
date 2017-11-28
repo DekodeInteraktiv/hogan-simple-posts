@@ -1,13 +1,13 @@
 {
-  "name": "dekodeinteraktiv/hogan-text",
-  "description": "WYSIWYG Text Module for Hogan",
-  "homepage": "https://github.com/dekodeinteraktiv/hogan-text",
+  "name": "dekodeinteraktiv/hogan-simple-post",
+  "description": "Simple listing module for Hogan",
+  "homepage": "https://github.com/DekodeInteraktiv/hogan-simple-posts",
   "type": "wordpress-plugin",
   "license": "GPL-3.0",
   "require": {
     "php": ">=5.5",
     "composer/installers": "~1.2",
-    "dekodeinteraktiv/hogan-core": "@dev"
+    "dekodeinteraktiv/hogan-core": "^1"
   },
   "archive": {
     "exclude": [
