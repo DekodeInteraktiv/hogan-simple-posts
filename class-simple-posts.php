@@ -5,6 +5,7 @@
  * @package Hogan
  */
 
+declare( strict_types = 1 );
 namespace Dekode\Hogan;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekode\\Hogan\\Module' ) ) {
 
 	/**
-	 * Simple Posts module class (WYSIWYG).
+	 * Simple Posts module class
 	 *
 	 * @extends Modules base class.
 	 */
@@ -54,8 +55,10 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 
 		/**
 		 * Field definitions for module.
+		 *
+		 * @return array $fields Fields for this module
 		 */
-		public function get_fields() {
+		public function get_fields() : array {
 
 			return [
 				[
@@ -180,46 +183,51 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		}
 
 		/**
-		 * Map fields to object variable.
+		 * Map raw fields from acf to object variable.
 		 *
-		 * @param array $content The content value.
+		 * @param array $raw_content Content values.
+		 * @param int   $counter Module location in page layout.
+		 * @return void
 		 */
-		public function load_args_from_layout_content( $content ) {
+		public function load_args_from_layout_content( array $raw_content, int $counter = 0 ) {
 
-			$this->list_type = $content['list_type'];
-			$this->card_type = $content['card_type'];
+			$this->list_type = $raw_content['list_type'];
+			$this->card_type = $raw_content['card_type'];
 
 			if ( 'manual' === $this->list_type ) :
-				$this->query = $this->populate_manual_list( $content['manual_list'] );
+				$this->query = $this->populate_manual_list( $raw_content['manual_list'] );
 			elseif ( 'automatic' === $this->list_type ) :
-				$this->query = $this->populate_automatic_list( $content['automatic_list'], $content['number_of_items'] );
+				$this->query = $this->populate_automatic_list( $raw_content['automatic_list'], $raw_content['number_of_items'] );
 			endif;
 
 			add_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // add filter for custom excerpt.
 
-			parent::load_args_from_layout_content( $content );
+			parent::load_args_from_layout_content( $raw_content, $counter );
 		}
 
 		/**
 		 * Filter hook for custom excerpt.
 		 *
 		 * @param string $excerpt .
-		 *
 		 * @return string
 		 */
-		public function on_the_excerpt( $excerpt ) {
+		public function on_the_excerpt( string $excerpt ) : string {
 			return apply_filters( 'hogan/module/simple_post/the_excerpt', $excerpt, $this );
 		}
 
 		/**
 		 * Validate module content before template is loaded.
+		 *
+		 * @return bool Whether validation of the module is successful / filled with content.
 		 */
-		public function validate_args() {
+		public function validate_args() : bool {
 			return ! empty( $this->query->have_posts() );
 		}
 
 		/**
 		 * Use super class method to reset post data.
+		 *
+		 * @return void
 		 */
 		protected function render_closing_template_wrappers() {
 			parent::render_closing_template_wrappers();
@@ -231,15 +239,14 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * Create list of post objects from post ids picked in manual list.
 		 *
 		 * @param array $category Category to fetch posts from.
-		 * @param int $number_of_posts Number of posts to fetch.
-		 *
-		 * @return List of posts to loop in the template.
+		 * @param int   $number_of_posts Number of posts to fetch.
+		 * @return \WP_Query Posts to loop in the template.
 		 */
-		protected function populate_automatic_list( $category, $number_of_posts ) {
+		protected function populate_automatic_list( array $category, int $number_of_posts ) : \WP_Query {
 
 			$args = [
 				'post_type'      => 'post',
-				'posts_per_page' => $number_of_posts,
+				'posts_per_page' => $number_of_posts ?? absint( get_option( 'posts_per_page' ) ),
 				'no_found_rows'  => true,
 				'tax_query'      => [
 					[
@@ -257,10 +264,9 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * Create list of post objects from post ids picked in manual list.
 		 *
 		 * @param array $post_ids List of ids.
-		 *
-		 * @return List of posts to loop in the template.
+		 * @return \WP_Query Posts to loop in the template.
 		 */
-		protected function populate_manual_list( $post_ids ) {
+		protected function populate_manual_list( $post_ids ) : \WP_Query {
 
 			$args = [
 				'post_type'              => [ 'post', 'page' ],
@@ -274,7 +280,5 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 
 			return new \WP_Query( $args );
 		}
-
 	}
-} // End if().
-
+}

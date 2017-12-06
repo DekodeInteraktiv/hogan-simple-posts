@@ -2,8 +2,9 @@
 /**
  * Plugin Name: Hogan Module: Simple Posts
  * Plugin URI: https://github.com/dekodeinteraktiv/hogan-simple-posts
+ * GitHub Plugin URI: https://github.com/dekodeinteraktiv/hogan-simple-posts
  * Description: Simple Posts List Module for Hogan
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Dekode
  * Author URI: https://dekode.no
  * License: GPL-3.0
@@ -16,6 +17,7 @@
  * @author Dekode
  */
 
+declare( strict_types = 1 );
 namespace Dekode\Hogan\Simple_Posts;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,6 +29,8 @@ add_action( 'hogan/include_modules', __NAMESPACE__ . '\\hogan_register_module' )
 
 /**
  * Register module text domain
+ *
+ * @return void
  */
 function hogan_load_textdomain() {
 	\load_plugin_textdomain( 'hogan-simple-posts', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
@@ -34,6 +38,8 @@ function hogan_load_textdomain() {
 
 /**
  * Register module in Hogan
+ *
+ * @return void
  */
 function hogan_register_module() {
 	require_once 'class-simple-posts.php';
