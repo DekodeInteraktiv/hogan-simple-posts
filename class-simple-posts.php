@@ -138,7 +138,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 					'label'             => __( 'Automatic List', 'hogan-simple-posts' ),
 					'name'              => 'automatic_list',
 					'instructions'      => __( 'Choose category', 'hogan-simple-posts' ),
-					'required'          => 0,
+					'required'          => 1,
 					'conditional_logic' => [
 						[
 							[
