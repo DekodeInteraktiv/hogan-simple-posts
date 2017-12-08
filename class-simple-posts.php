@@ -105,7 +105,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 					'name'              => 'manual_list',
 					'value'             => null,
 					'instructions'      => __( 'Add items to the list by clicking the items on the left side', 'hogan-simple-posts' ),
-					'required'          => 1,
+					'required'          => 0,
 					'conditional_logic' => [
 						[
 							[
@@ -128,7 +128,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 					'elements'          => [
 						0 => 'featured_image',
 					],
-					'min'               => 1,
+					'min'               => 0,
 					'max'               => 10,
 					'return_format'     => 'id',
 				],
@@ -138,7 +138,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 					'label'             => __( 'Automatic List', 'hogan-simple-posts' ),
 					'name'              => 'automatic_list',
 					'instructions'      => __( 'Choose category', 'hogan-simple-posts' ),
-					'required'          => 1,
+					'required'          => 0,
 					'conditional_logic' => [
 						[
 							[
@@ -161,7 +161,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 					'label'             => __( 'Number of items', 'hogan-simple-posts' ),
 					'name'              => 'number_of_items',
 					'instructions'      => __( 'Choose the number of items for the list', 'hogan-simple-posts' ),
-					'required'          => 1,
+					'required'          => 0,
 					'conditional_logic' => [
 						[
 							[
@@ -195,9 +195,9 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 			$this->card_type = $raw_content['card_type'];
 
 			if ( 'manual' === $this->list_type ) :
-				$this->query = $this->populate_manual_list( $raw_content['manual_list'] );
+				$this->query = $this->populate_manual_list( $raw_content['manual_list'] ?: [] );
 			elseif ( 'automatic' === $this->list_type ) :
-				$this->query = $this->populate_automatic_list( $raw_content['automatic_list'], $raw_content['number_of_items'] );
+				$this->query = $this->populate_automatic_list( (int)$raw_content['automatic_list'], (int)$raw_content['number_of_items'] );
 			endif;
 
 			add_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // add filter for custom excerpt.
@@ -221,7 +221,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * @return bool Whether validation of the module is successful / filled with content.
 		 */
 		public function validate_args() : bool {
-			return ! empty( $this->query->have_posts() );
+			return ! empty( $this->query ) && ! empty( $this->query->have_posts() );
 		}
 
 		/**
@@ -242,7 +242,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * @param int   $number_of_posts Number of posts to fetch.
 		 * @return \WP_Query Posts to loop in the template.
 		 */
-		protected function populate_automatic_list( array $category, int $number_of_posts ) : \WP_Query {
+		protected function populate_automatic_list( int $category, int $number_of_posts ) : \WP_Query {
 
 			$args = [
 				'post_type'      => 'post',
@@ -266,7 +266,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * @param array $post_ids List of ids.
 		 * @return \WP_Query Posts to loop in the template.
 		 */
-		protected function populate_manual_list( $post_ids ) : \WP_Query {
+		protected function populate_manual_list( array $post_ids ) : \WP_Query {
 
 			$args = [
 				'post_type'              => [ 'post', 'page' ],
