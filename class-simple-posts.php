@@ -268,6 +268,8 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 */
 		protected function populate_manual_list( array $post_ids ) : \WP_Query {
 
+			// Check if there are any posts in the list. Array with a zero value will return empty WP Query object.
+			$post_ids = ! empty( $post_ids ) ? $post_ids : [0];
 			$args = [
 				'post_type'              => [ 'post', 'page' ],
 				'posts_per_page'         => count( $post_ids ),
