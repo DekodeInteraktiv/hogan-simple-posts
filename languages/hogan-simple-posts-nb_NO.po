@@ -1,0 +1,107 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Hogan Module: Simple Posts\n"
+"POT-Creation-Date: 2017-12-20 10:24+0100\n"
+"PO-Revision-Date: 2017-12-20 10:30+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.5\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: hogan-simple-posts.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: class-simple-posts.php:50
+msgid "Simple Posts"
+msgstr "Enkle innlegg"
+
+#: class-simple-posts.php:67
+msgid "List Type"
+msgstr "Listetype"
+
+#: class-simple-posts.php:69
+msgid "Choose between automatic or manually populated list"
+msgstr "Velg mellom automatisk eller manuelt fylt liste"
+
+#: class-simple-posts.php:71
+msgid "Automatic"
+msgstr "Automatisk"
+
+#: class-simple-posts.php:72
+msgid "Manual"
+msgstr "Egendefinert"
+
+#: class-simple-posts.php:85
+msgid "Card Type"
+msgstr "Korttype"
+
+#: class-simple-posts.php:87
+msgid "Choose card type"
+msgstr "Velg korttype"
+
+#: class-simple-posts.php:89
+msgid "Small"
+msgstr "Liten"
+
+#: class-simple-posts.php:90
+msgid "Medium"
+msgstr "Medium"
+
+#: class-simple-posts.php:91
+msgid "Large"
+msgstr "Stor"
+
+#: class-simple-posts.php:104
+msgid "Manual List"
+msgstr "Egendefinert liste"
+
+#: class-simple-posts.php:107
+msgid "Add items to the list by clicking the items on the left side"
+msgstr ""
+"Legg til elementer i listen ved å klikke på elementene på venstre side"
+
+#: class-simple-posts.php:138
+msgid "Automatic List"
+msgstr "Automatisk liste"
+
+#: class-simple-posts.php:140
+msgid "Choose category"
+msgstr "Velg kategori"
+
+#: class-simple-posts.php:161
+msgid "Number of items"
+msgstr "Antall innlegg"
+
+#: class-simple-posts.php:163
+msgid "Choose the number of items for the list"
+msgstr "Velg antall innlegg for listen"
+
+#. Plugin Name of the plugin/theme
+msgid "Hogan Module: Simple Posts"
+msgstr "Hogan-modul: Enkle innlegg"
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/dekodeinteraktiv/hogan-simple-posts"
+msgstr "https://github.com/dekodeinteraktiv/hogan-simple-posts"
+
+#. Description of the plugin/theme
+msgid "Simple Posts List Module for Hogan"
+msgstr "Enkelt innleggsliste for Hogan"
+
+#. Author of the plugin/theme
+msgid "Dekode"
+msgstr "Dekode"
+
+#. Author URI of the plugin/theme
+msgid "https://dekode.no"
+msgstr "https://dekode.no"
