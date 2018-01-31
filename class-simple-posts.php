@@ -6,6 +6,7 @@
  */
 
 declare( strict_types = 1 );
+
 namespace Dekode\Hogan;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -58,7 +59,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 *
 		 * @return array $fields Fields for this module
 		 */
-		public function get_fields() : array {
+		public function get_fields(): array {
 
 			return [
 				[
@@ -129,7 +130,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 						0 => 'featured_image',
 					],
 					'min'               => 0,
-					'max'               => 10,
+					'max'               => apply_filters( 'hogan/module/simple_post/manual_list/max_count', '' ),
 					'return_format'     => 'id',
 				],
 				[
@@ -173,7 +174,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 					],
 					'default_value'     => 5,
 					'min'               => 1,
-					'max'               => 10,
+					'max'               => apply_filters( 'hogan/module/simple_post/automatic_list/max_count', '' ),
 					'step'              => 1,
 					'wrapper'           => [
 						'width' => '50',
@@ -187,6 +188,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 *
 		 * @param array $raw_content Content values.
 		 * @param int   $counter Module location in page layout.
+		 *
 		 * @return void
 		 */
 		public function load_args_from_layout_content( array $raw_content, int $counter = 0 ) {
@@ -197,7 +199,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 			if ( 'manual' === $this->list_type ) :
 				$this->query = $this->populate_manual_list( $raw_content['manual_list'] ?: [] );
 			elseif ( 'automatic' === $this->list_type ) :
-				$this->query = $this->populate_automatic_list( (int)$raw_content['automatic_list'], (int)$raw_content['number_of_items'] );
+				$this->query = $this->populate_automatic_list( (int) $raw_content['automatic_list'], (int) $raw_content['number_of_items'] );
 			endif;
 
 			add_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // add filter for custom excerpt.
@@ -209,6 +211,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * Filter hook for custom excerpt.
 		 *
 		 * @param string $excerpt .
+		 *
 		 * @return string
 		 */
 		public function on_the_excerpt( string $excerpt ) : string {
@@ -220,7 +223,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 *
 		 * @return bool Whether validation of the module is successful / filled with content.
 		 */
-		public function validate_args() : bool {
+		public function validate_args(): bool {
 			return ! empty( $this->query ) && ! empty( $this->query->have_posts() );
 		}
 
@@ -238,8 +241,9 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		/**
 		 * Create list of post objects from post ids picked in manual list.
 		 *
-		 * @param array $category Category to fetch posts from.
-		 * @param int   $number_of_posts Number of posts to fetch.
+		 * @param int $category Category to fetch posts from.
+		 * @param int $number_of_posts Number of posts to fetch.
+		 *
 		 * @return \WP_Query Posts to loop in the template.
 		 */
 		protected function populate_automatic_list( int $category, int $number_of_posts ) : \WP_Query {
@@ -264,13 +268,14 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 * Create list of post objects from post ids picked in manual list.
 		 *
 		 * @param array $post_ids List of ids.
+		 *
 		 * @return \WP_Query Posts to loop in the template.
 		 */
 		protected function populate_manual_list( array $post_ids ) : \WP_Query {
 
 			// Check if there are any posts in the list. Array with a zero value will return empty WP Query object.
-			$post_ids = ! empty( $post_ids ) ? $post_ids : [0];
-			$args = [
+			$post_ids = ! empty( $post_ids ) ? $post_ids : [ 0 ];
+			$args     = [
 				'post_type'              => [ 'post', 'page' ],
 				'posts_per_page'         => count( $post_ids ),
 				'orderby'                => 'post__in',
