@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/dekodeinteraktiv/hogan-simple-posts
  * GitHub Plugin URI: https://github.com/dekodeinteraktiv/hogan-simple-posts
  * Description: Simple Posts List Module for Hogan
- * Version: 1.0.8
+ * Version: 1.0.9
  * Author: Dekode
  * Author URI: https://dekode.no
  * License: GPL-3.0-or-later
@@ -39,6 +39,7 @@ function hogan_load_textdomain() {
 /**
  * Register module in Hogan
  *
+ * @param \Dekode\Hogan\Core $core Hogan Core instance.
  * @return void
  */
 function hogan_register_module( \Dekode\Hogan\Core $core ) {
