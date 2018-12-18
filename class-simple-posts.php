@@ -59,7 +59,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 *
 		 * @return array $fields Fields for this module
 		 */
-		public function get_fields(): array {
+		public function get_fields() : array {
 
 			return [
 				[
@@ -130,7 +130,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 						0 => 'featured_image',
 					],
 					'min'               => 0,
-					'max'               => apply_filters( 'hogan/module/simple_post/manual_list/max_count', '' ),
+					'max'               => apply_filters( 'hogan/module/simple_posts/manual_list/max_count', '' ),
 					'return_format'     => 'id',
 				],
 				[
@@ -174,7 +174,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 					],
 					'default_value'     => 5,
 					'min'               => 1,
-					'max'               => apply_filters( 'hogan/module/simple_post/automatic_list/max_count', '' ),
+					'max'               => apply_filters( 'hogan/module/simple_posts/automatic_list/max_count', '' ),
 					'step'              => 1,
 					'wrapper'           => [
 						'width' => '50',
@@ -202,20 +202,51 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 				$this->query = $this->populate_automatic_list( (int) $raw_content['automatic_list'], (int) $raw_content['number_of_items'] );
 			endif;
 
-			add_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // add filter for custom excerpt.
+			add_filter( 'the_title', [ $this, 'on_the_title' ], 10, 2 ); // add filter for custom title.
+			add_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ], 10, 1 ); // add filter for custom excerpt.
+			add_filter( 'get_post_metadata', [ $this, 'on_get_post_metadata' ], 10, 3 ); // add filter for custom image id.
 
 			parent::load_args_from_layout_content( $raw_content, $counter );
 		}
 
 		/**
+		 * Filter hook for custom title.
+		 *
+		 * @param string $title The post title.
+		 * @param int    $id The post ID.
+		 *
+		 * @return string
+		 */
+		public function on_the_title( string $title, int $id ) : string {
+			return apply_filters( 'hogan/module/simple_posts/the_title', $title, $id, $this );
+		}
+
+		/**
 		 * Filter hook for custom excerpt.
 		 *
-		 * @param string $excerpt .
+		 * @param string $excerpt Post excerpt.
 		 *
 		 * @return string
 		 */
 		public function on_the_excerpt( string $excerpt ) : string {
-			return apply_filters( 'hogan/module/simple_post/the_excerpt', $excerpt, $this );
+			return apply_filters( 'hogan/module/simple_posts/the_excerpt', $excerpt, $this );
+		}
+
+		/**
+		 * Filter hook for returning custom image id.
+		 *
+		 * @param null   $check The value received from the filter.
+		 * @param int    $post_id WP Post id.
+		 * @param string $meta_key Meta key.
+		 *
+		 * @return mixed Null or custom post meta id for attachment.
+		 */
+		public function on_get_post_metadata( $check, $post_id, $meta_key ) { // phpcs:ignore NeutronStandard.Functions.TypeHint.NoReturnType
+			if ( '_thumbnail_id' === $meta_key ) {
+				return apply_filters( 'hogan/module/simple_posts/the_image_metadata_value', $check, $post_id, $this );
+			}
+
+			return $check;
 		}
 
 		/**
@@ -223,7 +254,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 *
 		 * @return bool Whether validation of the module is successful / filled with content.
 		 */
-		public function validate_args(): bool {
+		public function validate_args() : bool {
 			return ! empty( $this->query ) && ! empty( $this->query->have_posts() );
 		}
 
@@ -234,7 +265,9 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 */
 		protected function render_closing_template_wrappers() {
 			parent::render_closing_template_wrappers();
+			remove_filter( 'the_title', [ $this, 'on_the_title' ] ); // remove filter for custom title.
 			remove_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // remove filter for custom excerpt.
+			remove_filter( 'get_post_metadata', [ $this, 'on_get_post_metadata' ] ); // remove filter for custom image id.
 			\wp_reset_postdata();
 		}
 
