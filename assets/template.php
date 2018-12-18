@@ -8,6 +8,7 @@
  */
 
 declare( strict_types = 1 );
+
 namespace Dekode\Hogan;
 
 if ( ! defined( 'ABSPATH' ) || ! ( $this instanceof Simple_Posts ) ) {
@@ -22,7 +23,7 @@ if ( $this->query->have_posts() ) : ?>
 			?>
 			<li class="list-item">
 				<a href="<?php echo esc_url( get_the_permalink() ); ?>">
-					<?php if ( true === apply_filters( 'hogan/module/simple_post/show_image_column', 'small' !== $this->card_type, $this ) ) : ?>
+					<?php if ( true === apply_filters( 'hogan/module/simple_posts/show_image_column', 'small' !== $this->card_type, $this ) ) : ?>
 						<div class="column">
 							<div class="featured-image"><?php echo get_the_post_thumbnail( null, apply_filters( 'hogan/module/simple_posts/image_size', 'post-thumbnail', $this ) ); ?></div>
 						</div>
@@ -30,10 +31,11 @@ if ( $this->query->have_posts() ) : ?>
 					<div class="column">
 						<h3 class="entry-title"><?php the_title_attribute(); ?></h3>
 						<?php the_excerpt(); ?>
+						<?php do_action( 'hogan/module/simple_posts/after_the_excerpt' ); ?>
 					</div>
 				</a>
 			</li>
-			<?php
+		<?php
 		endwhile;
 		?>
 	</ul>
