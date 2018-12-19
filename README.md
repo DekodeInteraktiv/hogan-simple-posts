@@ -11,6 +11,7 @@ Install the module using Composer `composer require dekodeinteraktiv/hogan-simpl
 - `hogan/module/simple_posts/the_title` : Filter hook for custom title. Default wp title.
 - `hogan/module/simple_posts/the_excerpt` : Filter hook for custom excerpt. Default wp excerpt.
 - `hogan/module/simple_posts/the_image_metadata_value` : Filter for returning a custom attachment id. Default null, which will fetch the post meta data for _thumbnail_id 
+- `hogan/module/simple_posts/relationship/post_types` : Which post types to allow. Default `['post', 'page']`.
 - `hogan/module/simple_posts/manual_list/max_count` : Max count for posts in manual list. Default `''` (infinite).
 - `hogan/module/simple_posts/automatic_list/max_count` : Max count for posts in automatic list. Default `''` (infinite).
 

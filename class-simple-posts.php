@@ -116,10 +116,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 							],
 						],
 					],
-					'post_type'         => [
-						0 => 'post',
-						1 => 'page',
-					],
+					'post_type'         => apply_filters( 'hogan/module/simple_posts/post_types', [ 'post', 'page' ] ),
 					'taxonomy'          => [],
 					'filters'           => [
 						0 => 'search',
@@ -309,7 +306,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 			// Check if there are any posts in the list. Array with a zero value will return empty WP Query object.
 			$post_ids = ! empty( $post_ids ) ? $post_ids : [ 0 ];
 			$args     = [
-				'post_type'              => [ 'post', 'page' ],
+				'post_type'              => apply_filters( 'hogan/module/simple_posts/post_types', [ 'post', 'page' ] ),
 				'posts_per_page'         => count( $post_ids ),
 				'orderby'                => 'post__in',
 				'post__in'               => $post_ids,
