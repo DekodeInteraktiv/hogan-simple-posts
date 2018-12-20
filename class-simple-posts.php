@@ -199,11 +199,24 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 				$this->query = $this->populate_automatic_list( (int) $raw_content['automatic_list'], (int) $raw_content['number_of_items'] );
 			endif;
 
+			add_filter( 'post_type_link', [ $this, 'on_post_type_link' ], 10, 2 ); // add filter for post link - custom type.
 			add_filter( 'the_title', [ $this, 'on_the_title' ], 10, 2 ); // add filter for custom title.
 			add_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ], 10, 1 ); // add filter for custom excerpt.
 			add_filter( 'get_post_metadata', [ $this, 'on_get_post_metadata' ], 10, 3 ); // add filter for custom image id.
 
 			parent::load_args_from_layout_content( $raw_content, $counter );
+		}
+
+		/**
+		 * Filter hook for post link.
+		 *
+		 * @param string   $permalink The post's permalink.
+		 * @param \WP_Post $post The post in question.
+		 *
+		 * @return string
+		 */
+		public function on_post_type_link( string $permalink, \WP_Post $post ) : string {
+			return apply_filters( 'hogan/module/simple_posts/post_type_link', $permalink, $post, $this );
 		}
 
 		/**
@@ -262,6 +275,7 @@ if ( ! class_exists( '\\Dekode\\Hogan\\Simple_Posts' ) && class_exists( '\\Dekod
 		 */
 		protected function render_closing_template_wrappers() {
 			parent::render_closing_template_wrappers();
+			remove_filter( 'post_type_link', [ $this, 'on_post_type_link' ] ); // remove filter for post link.
 			remove_filter( 'the_title', [ $this, 'on_the_title' ] ); // remove filter for custom title.
 			remove_filter( 'the_excerpt', [ $this, 'on_the_excerpt' ] ); // remove filter for custom excerpt.
 			remove_filter( 'get_post_metadata', [ $this, 'on_get_post_metadata' ] ); // remove filter for custom image id.
