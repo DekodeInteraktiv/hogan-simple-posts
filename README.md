@@ -22,6 +22,7 @@ Install the module using Composer `composer require dekodeinteraktiv/hogan-simpl
 - `hogan/module/simple_posts/show_image_column` : Whether or not to show image column for a card in frontend. `false` if the card type is set to small, otherwise `true`
 - `hogan/module/simple_posts/image_size` : Image thumb size for the card. Default `post-thumbnail``
 - `hogan/module/simple_posts/featured_image` : Featured image output. Default response of `get_the_post_thumbnail()`
+- `hogan/module/simple_posts/card_heading` : Card heading tag. Default: `'h2'`
 
 #### Actions
 - `hogan/module/simple_posts/after_the_excerpt` : Action to insert content after the excerpt.

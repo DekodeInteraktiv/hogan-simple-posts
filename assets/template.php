@@ -14,7 +14,7 @@ namespace Dekode\Hogan;
 if ( ! defined( 'ABSPATH' ) || ! ( $this instanceof Simple_Posts ) ) {
 	return; // Exit if accessed directly.
 }
-
+write_log('template');
 if ( $this->query->have_posts() ) : ?>
 	<ul class="list-items card-type-<?php echo esc_attr( $this->card_type ); ?>">
 		<?php
@@ -35,7 +35,7 @@ if ( $this->query->have_posts() ) : ?>
 						</div>
 					<?php endif; ?>
 					<div class="column">
-						<h3 class="entry-title"><?php the_title_attribute(); ?></h3>
+						<?php printf( '<%1$s class="entry-title">%2$s</%1$s>', apply_filters( 'hogan/module/simple_posts/card_heading', 'h2' ), the_title_attribute( [ 'echo' => false ] ) ); ?>
 						<?php the_excerpt(); ?>
 						<?php do_action( 'hogan/module/simple_posts/after_the_excerpt' ); ?>
 					</div>
